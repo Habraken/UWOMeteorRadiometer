@@ -26,6 +26,7 @@ First, always start with updating and upgrading the pi OS.
 ```
 sudo apt update
 sudo apt upgrade
+sudo apt autoremove
 ```
 
 Next,you will need to install the BCM2835 library from the Waveshare website, which is used the by ADC: [BCM2835](http://www.airspayce.com/mikem/bcm2835/bcm2835-1.73.tar.gz).
