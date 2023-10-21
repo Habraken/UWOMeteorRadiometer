@@ -9,8 +9,7 @@ add the following to ```/boot/config.txt```:
 # Disable the ACT LED.
 dtparam=act_led_trigger=none
 dtparam=act_led_activelow=off
-```
-```
+
 # Disable the PWR LED.
 dtparam=pwr_led_trigger=default-on
 dtparam=pwr_led_activelow=off
