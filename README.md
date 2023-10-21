@@ -26,7 +26,7 @@ sudo ./configure && sudo make && sudo make check && sudo make install
 sudo reboot now
 ```
 
-Clone the UWOMeteorRadiometer repository.
+Next, clone the UWOMeteorRadiometer repository.
 ```
 git clone https://github.com/Habraken/UWOMeteorRadiometer
 ```
