@@ -15,7 +15,7 @@ dtparam=act_led_activelow=off
 dtparam=pwr_led_trigger=default-on
 dtparam=pwr_led_activelow=off
 ```
-Note: The method for disabling the power LED was updated following a firmware change that fixed a pwr_led_trigger setting on the Pi 3B+ and 4; see this GitHub issue for details.
+Note: The method for disabling the power LED was updated following a firmware change that fixed a pwr_led_trigger setting on the Pi 3B+ and 4; see this [GitHub issue](https://github.com/raspberrypi/firmware/issues/1742) for details.
 
 
 
