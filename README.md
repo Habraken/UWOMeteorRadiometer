@@ -57,7 +57,7 @@ git clone https://github.com/Habraken/UWOMeteorRadiometer
 
 Next, in the UWOMeterRadiometer directory run the ```sudo ./python3_radiometer_installation.sh``` script to install all required packages. This will take a while. (Espesscialy if numpy needs to be compiled!)
 
-If while the above script fails with this error: 
+If while the above script fails with this error: ```AttributeError: module 'lib' has no attribute 'X509_V_FLAG_CB_ISSUER_CHECK'```
 
 You may need to update pip to latest version. See this [link](https://askubuntu.com/questions/1428181/module-lib-has-no-attribute-x509-v-flag-cb-issuer-check/1433089#1433089) for more information.
 
