@@ -20,7 +20,13 @@ Note: The method for disabling the power LED was updated following a firmware ch
 
 ## Installation
 
-First, you will need to install the BCM2835 library from the Waveshare website, which is used the by ADC: [BCM2835](http://www.airspayce.com/mikem/bcm2835/bcm2835-1.73.tar.gz).
+First, always start with updating and upgrading the pi OS.
+```
+sudo apt udate
+sudo apt upgrade
+```
+
+Next,you will need to install the BCM2835 library from the Waveshare website, which is used the by ADC: [BCM2835](http://www.airspayce.com/mikem/bcm2835/bcm2835-1.73.tar.gz).
 This is a C library for Raspberry Pi (RPi). It provides access to GPIO and other IO functions on the Broadcom BCM 2835 chip, as used in the RaspberryPi, allowing access to the GPIO pins on the 26 pin IDE plug on the RPi board so you can control and interface with various external devices.
 
 It provides functions for reading digital inputs and setting digital outputs, using SPI and I2C, and for accessing the system timers. Pin event detection is supported by polling (interrupts are not supported).
