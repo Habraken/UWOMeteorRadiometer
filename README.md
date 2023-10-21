@@ -2,6 +2,8 @@
 
 Only supports Python 3, Python 2 not supported. Note: For now, it seems it doesn't work with Pi OS 'Bullseye' nor 'Bookworm', so we are stuck with Buster. Please check the wiki for more info.
 
+The steps below are tested on 2021-05-07-raspios-buster-armhf.zip, downloaded from here: [link]()https://downloads.raspberrypi.com/raspios_armhf/images/raspios_armhf-2021-05-28/
+
 As we want to operate the meteor radiometer in complete darkness you may want to disable both the PWR and ACT LEDs of the Raspebbery Pi permanently:
 
 add the following to ```/boot/config.txt```:
