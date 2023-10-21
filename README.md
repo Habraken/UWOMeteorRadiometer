@@ -73,6 +73,7 @@ Then in the UWOMeteorRadiometer folder run:
 ```
 sudo python3 setup.py install
 ```
+as the final step of the installation process.
 
 
 ## Initial setup and recording
