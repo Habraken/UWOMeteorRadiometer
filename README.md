@@ -12,7 +12,7 @@ It provides functions for reading digital inputs and setting digital outputs, us
 
 Works on all versions up to and including RPI 4. Works with all versions of Debian up to and including Debian Buster 10. Reported to be working on Bullseye (Raspbian v11)
 
-[link](http://www.airspayce.com/mikem/bcm2835/)
+This is a link to the page with more information: [link](http://www.airspayce.com/mikem/bcm2835/). To download the library:
 
 ```
 wget https://www.airspayce.com/mikem/bcm2835/bcm2835-1.73.tar.gz
