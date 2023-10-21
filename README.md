@@ -55,7 +55,7 @@ Next, clone the UWOMeteorRadiometer repository.
 git clone https://github.com/Habraken/UWOMeteorRadiometer
 ```
 
-Next, in the UWOMeterRadiometer directory run the ```sudo ./python3_radiometer_installation.sh``` script to install all required packages. This will take a while.
+Next, in the UWOMeterRadiometer directory run the ```sudo ./python3_radiometer_installation.sh``` script to install all required packages. This will take a while. (Espesscialy if numpy needs to be compiled!)
 
 Then in the UWOMeteorRadiometer folder run:
 ```
