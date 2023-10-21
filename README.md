@@ -15,7 +15,7 @@ Works on all versions up to and including RPI 4. Works with all versions of Debi
 This is a link to the page with more information: [link](http://www.airspayce.com/mikem/bcm2835/). To download the library:
 
 ```
-wget https://www.airspayce.com/mikem/bcm2835/bcm2835-1.73.tar.gz
+wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.73.tar.gz
 ```
 
 Unzip it and follow the instructions in the 'INSTALL' file that should be present in the extracted directory. It's a very basic .configure, make, make install procedure. After these steps reboot the raspberry pi.
