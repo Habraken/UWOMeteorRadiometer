@@ -2,6 +2,22 @@
 
 Only supports Python 3, Python 2 not supported. Note: For now, it seems it doesn't work with Pi OS 'Bullseye' nor 'Bookworm', so we are stuck with Buster. Please check the wiki for more info.
 
+As we want to operate the meteor radiometer in complete darkness you may want to disable both the PWR and ACT LEDs of the Raspebbery Pi permanently:
+
+add the following to ```/boot/config.txt```:
+```
+# Disable the ACT LED.
+dtparam=act_led_trigger=none
+dtparam=act_led_activelow=off
+```
+```
+# Disable the PWR LED.
+dtparam=pwr_led_trigger=default-on
+dtparam=pwr_led_activelow=off
+```
+Note: The method for disabling the power LED was updated following a firmware change that fixed a pwr_led_trigger setting on the Pi 3B+ and 4; see this GitHub issue for details.
+
+
 
 ## Installation
 
