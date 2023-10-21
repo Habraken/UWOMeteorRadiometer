@@ -19,7 +19,7 @@ sudo ./configure && sudo make && sudo make check && sudo make install
 
 Clone the UWOMeteorRadiometer repository.
 ```
-got clone https://github.com/Habraken/UWOMeteorRadiometer
+git clone https://github.com/Habraken/UWOMeteorRadiometer
 ```
 
 Next, in the UWOMeterRadiometer directory run the ```sudo ./python3_radiometer_installation.sh``` script to install all required packages. This will take a while.
