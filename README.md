@@ -22,7 +22,7 @@ Note: The method for disabling the power LED was updated following a firmware ch
 
 First, always start with updating and upgrading the pi OS.
 ```
-sudo apt udate
+sudo apt update
 sudo apt upgrade
 ```
 
