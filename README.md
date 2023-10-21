@@ -1,6 +1,6 @@
 # UWOMeteorRadiometer
 
-Only supports Python 3, Python 2 not supported. Note: For now, it seems it doesn't work with Pi OS 'Bullseye' nor 'Bookworm'! Please check the wiki for more info.
+Only supports Python 3, Python 2 not supported. Note: For now, it seems it doesn't work with Pi OS 'Bullseye' nor 'Bookworm', so we are stuck with Buster. Please check the wiki for more info.
 
 
 ## Installation
@@ -10,11 +10,12 @@ First, you will need to install the BCM2835 library from the Waveshare website, 
 wget https://www.airspayce.com/mikem/bcm2835/bcm2835-1.73.tar.gz
 ```
 
-Unzip it and follow the instructions in the 'INSTALL' file that should be present in the extracted directory. It's a very basic .configure, make, make install procedure.
+Unzip it and follow the instructions in the 'INSTALL' file that should be present in the extracted directory. It's a very basic .configure, make, make install procedure. After these steps reboot the raspberry pi.
 ```
 tar zxvf bcm2835-1.73.tar.gz 
 cd bcm2835-1.73
 sudo ./configure && sudo make && sudo make check && sudo make install
+sudo reboot now
 ```
 
 Clone the UWOMeteorRadiometer repository.
