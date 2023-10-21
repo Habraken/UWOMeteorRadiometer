@@ -67,6 +67,7 @@ Next, in the UWOMeterRadiometer directory run the ```sudo ./python3_radiometer_i
 >> wget https://bootstrap.pypa.io/get-pip.py
 >> sudo python3 get-pip.py
 >> ```
+> When the uograde of pip was succesful you can re-run the ```python_radiometer_installation.sh``` script again.
 
 Then in the UWOMeteorRadiometer folder run:
 ```
