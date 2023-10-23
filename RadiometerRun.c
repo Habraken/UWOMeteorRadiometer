@@ -252,7 +252,7 @@ void ADS1256_StartScan(uint8_t _ucScanMode)
     g_tADS1256.ScanMode = 1;
 
     //g_tADS1256.Channel = 0;
-    g_tADS1256.Channel = 2;
+    g_tADS1256.Channel = 3;
 	
 
 }
@@ -404,7 +404,8 @@ void ADS1256_CfgADC(uint8_t _gain, uint8_t _drate)
 
            The new (passive) radiometer can be set as required by the config.txt file.
         */
-		buf[3] = _drate;	
+		//buf[3] = _drate;
+        buf[3] = 0xC0;	
 
         // Send the configuration parameters to the ADC
 		CS_0();	
@@ -739,8 +740,8 @@ void Init_ADC(double _gain,double _sps,uint8_t _mode)
     uint8_t gain = getgain(_gain);
     uint8_t sps = samplerate(_sps);
     
-    ADS1256_CfgADC(gain, sps);
-    ADS1256_StartScan(_mode);
+    ADS1256_CfgADC(gain, 0xC0);
+    //ADS1256_StartScan(_mode);
 }
 
 /*
@@ -1142,7 +1143,7 @@ int thread1(double duration, unsigned char mode, double gain,char *station_code,
     
     // Init ADC
     Init_ADC(gain, sps, mode);
-    Init_Single_Channel(adc_channel);
+    //Init_Single_Channel(adc_channel);
 	
     // Print recording new file
     printf("Recording a new file\n");

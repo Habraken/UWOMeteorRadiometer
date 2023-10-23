@@ -42,7 +42,7 @@ sps = 3750
 #gain = 1
 #mode = 1
 
-DATA_MIN = 0
+DATA_MIN = -2**23 #0
 DATA_MAX = 2**23 - 1
 data_min=1
 data_max=-1
@@ -64,8 +64,8 @@ rdm_config = readConfig(config_path)
 
 
 # Init the ADC
-ads1256.init(rdm_config.gain,sps, rdm_config.mode)
-ads1256.init_channel(channel)
+ads1256.init(rdm_config.gain, sps, rdm_config.mode)
+#ads1256.init_channel(channel)
 
 ##############################################################################################################
 
