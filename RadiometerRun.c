@@ -178,7 +178,7 @@ ADS1256_VAR_T g_tADS1256;
 void  bsp_DelayUS(uint64_t micros);
 void ADS1256_StartScan(uint8_t _ucScanMode);
 static void ADS1256_Send8Bit(uint8_t _data);
-void ADS1256_CfgADC(uint8_t _gain, uint8_t _drate);
+uint8_t ADS1256_CfgADC(uint8_t _gain, uint8_t _drate);
 static void ADS1256_DelayDATA(void);
 static uint8_t ADS1256_Recive8Bit(void);
 static void ADS1256_WriteReg(uint8_t _RegID, uint8_t _RegValue);
@@ -285,45 +285,46 @@ static void ADS1256_Send8Bit(uint8_t _data)
 *********************************************************************************************************
 */
 
-void ADS1256_CfgADC(uint8_t _gain, uint8_t _drate)
+uint8_t ADS1256_CfgADC(uint8_t _gain, uint8_t _drate)
 {
 
     // Wait before sending data
 	ADS1256_WaitDRDY();
 
-	{
-        /* Storage ads1256 register configuration parameters */
-        uint8_t buf[4]; //buf[0]=STATUS, buf[1]=MUX, buf[2]=ADCON, buf[3]=DRATE
+    /* Storage ads1256 register configuration parameters */
+        uint8_t tx_buf[4]; // tx_buf[0]=STATUS, tx_buf[1]=MUX, tx_buf[2]=ADCON, tx_buf[3]=DRATE
+        uint8_t rx_buf[4]; // rx_buf[0]=STATUS, rx_buf[1]=MUX, rx_buf[2]=ADCON, rx_buf[3]=DRATE
+        uint8_t error = 1; // error > will terminate program
 
-		/* STATUS register define, adress 0x00
-			Bits 7-4 ID3, ID2, ID1, ID0  Factory Programmed Identification Bits (Read Only)
+	/* STATUS register define, adress 0x00
+		Bits 7-4 ID3, ID2, ID1, ID0  Factory Programmed Identification Bits (Read Only)
 
-			Bit 3 ORDER: Data Output Bit Order
-				0 = Most Significant Bit First (default)
-				1 = Least Significant Bit First
+		Bit 3 ORDER: Data Output Bit Order
+			0 = Most Significant Bit First (default)
+			1 = Least Significant Bit First
 			Input data  is always shifted in most significant byte and bit first. Output data is always shifted out most significant
 			byte first. The ORDER bit only controls the bit order of the output data within the byte.
 
-			Bit 2 ACAL : Auto-Calibration
-				0 = Auto-Calibration Disabled (default)
-				1 = Auto-Calibration Enabled
+		Bit 2 ACAL : Auto-Calibration
+			0 = Auto-Calibration Disabled (default)
+			1 = Auto-Calibration Enabled
 			When Auto-Calibration is enabled, self-calibration begins at the completion of the WREG command that changes
 			the PGA (bits 0-2 of ADCON register), DR (bits 7-0 in the DRATE register) or BUFEN (bit 1 in the STATUS register)
 			values.
 
-			Bit 1 BUFEN: Analog Input Buffer Enable
-				0 = Buffer Disabled (default)
-				1 = Buffer Enabled
+		Bit 1 BUFEN: Analog Input Buffer Enable
+			0 = Buffer Disabled (default)
+			1 = Buffer Enabled
 
-			Bit 0 DRDY :  Data Ready (Read Only)
-				This bit duplicates the state of the DRDY pin.
+		Bit 0 DRDY :  Data Ready (Read Only)
+			This bit duplicates the state of the DRDY pin.
 
-			The new (passive) radiometer requires ACAL=1 and BUFEN=1 enable  auto calibration and high impedance input buffer
-		*/
-		buf[0] = (0 << 3) | (1 << 2) | (1 << 1);    // ORDER=0, ACAL=1 and BUFEN=1
+		The new (passive) radiometer requires ACAL=1 and BUFEN=1 enable  auto calibration and high impedance input buffer
+	*/
+	tx_buf[0] = (0 << 3) | (1 << 2) | (1 << 1);    // ORDER=0, ACAL=1 and BUFEN=1
         
-        /* MUX register define, adress 0x01
-            Bits 7-4 PSEL3, PSEL2, PSEL1, PSEL0: Positive Input Channel (AIN P) Select
+    /* MUX register define, adress 0x01
+        Bits 7-4 PSEL3, PSEL2, PSEL1, PSEL0: Positive Input Channel (AIN P) Select
                 0000 = AIN0 (default)
                 0001 = AIN1
                 0010 = AIN2 (ADS1256 only)
@@ -333,9 +334,9 @@ void ADS1256_CfgADC(uint8_t _gain, uint8_t _drate)
                 0110 = AIN6 (ADS1256 only)
                 0111 = AIN7 (ADS1256 only)
                 1xxx = AINCOM (when PSEL3 = 1, PSEL2, PSEL1, PSEL0 are “don’t care”)
-            NOTE: When using an ADS1255 make sure to only select the available inputs.
+        NOTE: When using an ADS1255 make sure to only select the available inputs.
 
-            Bits 3-0 NSEL3, NSEL2, NSEL1, NSEL0: Negative Input Channel (AIN N )Select
+        Bits 3-0 NSEL3, NSEL2, NSEL1, NSEL0: Negative Input Channel (AIN N )Select
                 0000 = AIN0
                 0001 = AIN1 (default)
                 0010 = AIN2 (ADS1256 only)
@@ -347,28 +348,28 @@ void ADS1256_CfgADC(uint8_t _gain, uint8_t _drate)
                 1xxx = AINCOM (when NSEL3 = 1, NSEL2, NSEL1, NSEL0 are “don’t care”)
                 NOTE: When using an ADS1255 make sure to only select the available inputs.
 
-            The new (passive) radiometer is hard-wired to AIN4 and AIN5
-        */
-		buf[1] = 0x54;	
+        The new (passive) radiometer is hard-wired to AIN4 and AIN5
+    */
+	tx_buf[1] = 0x54;	
 
-		/* ADCON register define, address 0x02
-			Bit 7 Reserved, always 0 (Read Only)
-			Bits 6-5 CLK1, CLK0 : D0/CLKOUT Clock Out Rate Setting
+	/* ADCON register define, address 0x02
+		Bit 7 Reserved, always 0 (Read Only)
+		Bits 6-5 CLK1, CLK0 : D0/CLKOUT Clock Out Rate Setting
 				00 = Clock Out OFF
 				01 = Clock Out Frequency = fCLKIN (default)
 				10 = Clock Out Frequency = fCLKIN/2
 				11 = Clock Out Frequency = fCLKIN/4
 				When not using CLKOUT, it is recommended that it be turned off. These bits can only be reset using the RESET pin.
 
-			Bits 4-3 SDCS1, SCDS0: Sensor Detect Current Sources
+		Bits 4-3 SDCS1, SCDS0: Sensor Detect Current Sources
 				00 = Sensor Detect OFF (default)
 				01 = Sensor Detect Current = 0.5 ŠÌ A
 				10 = Sensor Detect Current = 2 ŠÌ A
 				11 = Sensor Detect Current = 10ŠÌ A
-				The Sensor Detect Current Sources can be activated to verify  the integrity of an external sensor supplying a signal to the
-				ADS1255/6. A shorted sensor produces a very small signal while an open-circuit sensor produces a very large signal.
+		        The Sensor Detect Current Sources can be activated to verify  the integrity of an external sensor supplying a signal to the
+		        ADS1255/6. A shorted sensor produces a very small signal while an open-circuit sensor produces a very large signal.
 
-			Bits 2-0 PGA2, PGA1, PGA0: Programmable Gain Amplifier Setting
+		Bits 2-0 PGA2, PGA1, PGA0: Programmable Gain Amplifier Setting
 				000 = 1 (default)
 				001 = 2
 				010 = 4
@@ -378,12 +379,12 @@ void ADS1256_CfgADC(uint8_t _gain, uint8_t _drate)
 				110 = 64
 				111 = 64
 
-            The new (passive) radiometer can be set as required by the config.txt file.
-		*/
-		buf[2] = (0 << 5) | (0 << 3) | (_gain << 0);
+        The new (passive) radiometer can be set as required by the config.txt file.
+	*/
+	tx_buf[2] = (0 << 5) | (0 << 3) | (_gain << 0);
 
-        /* DRATE register define, adress 0x03
-            Bits 7-0 DR[7: 0]: Data Rate Setting (1)
+    /* DRATE register define, adress 0x03
+        Bits 7-0 DR[7: 0]: Data Rate Setting (1)
                 11110000, 0xF0 = 30,000SPS (default)
                 11100000, 0xE0 = 15,000SPS
                 11010000, 0xD0 = 7,500SPS
@@ -400,28 +401,57 @@ void ADS1256_CfgADC(uint8_t _gain, uint8_t _drate)
                 00100011, 0x23 = 10SPS
                 00010011, 0x13 = 5SPS
                 00000011, 0x03 = 2.5SPS
-            (1) for fCLKIN = 7.68MHz. Data rates scale linearly with fCLKIN.
+        (1) for fCLKIN = 7.68MHz. Data rates scale linearly with fCLKIN.
 
-           The new (passive) radiometer can be set as required by the config.txt file.
-        */
-		//buf[3] = _drate;
-        buf[3] = 0xC0;	
+        The new (passive) radiometer can be set as required by the config.txt file.
+    */
+	//buf[3] = _drate;
+    tx_buf[3] = 0xC0;	
+        
+    // Initialize the ADC with configuartion parameters
+    // Send the configuration parameters to the ADC
+	CS_0();	
+	ADS1256_Send8Bit(CMD_WREG | 0);	/* Write command register, send the register start address */
+	ADS1256_Send8Bit(0x03);			/* 2nd CMD byte number of bytes: 4 - 1                     */
+    ADS1256_Send8Bit(tx_buf[0]);	/* Set the STATUS register */
+	ADS1256_Send8Bit(tx_buf[1]);	/* Set the MUX register    */
+	ADS1256_Send8Bit(tx_buf[2]);	/* Set the ADCON register  */
+	ADS1256_Send8Bit(tx_buf[3]);	/* Set the DARTE register  */
+    CS_1();	/* SPI  cs = 1 */
+        
+    // wait for a while
+    bsp_DelayUS(1000);
+        
+    // Check if the configuration was succesful
+    // Read ADC configuration parameters from the ADC
+    CS_0();
+    ADS1256_Send8Bit(CMD_RREG | 0);	/* Write command register    */
+	ADS1256_Send8Bit(0x03);	        /* Write the register number */
+	ADS1256_DelayDATA();	        /*         delay time        */
+	rx_buf[0] = ADS1256_Recive8Bit();/*  Read the register values */
+    rx_buf[1] = ADS1256_Recive8Bit();/*  Read the register values */
+    rx_buf[2] = ADS1256_Recive8Bit();/*  Read the register values */
+    rx_buf[3] = ADS1256_Recive8Bit();/*  Read the register values */
+    CS_1();
 
-        // Send the configuration parameters to the ADC
-		CS_0();	
-		ADS1256_Send8Bit(CMD_WREG | 0);	/* Write command register, send the register start address */
-		ADS1256_Send8Bit(0x03);			/* 2nd CMD byte number of bytes: 4 - 1                     */
-
-		ADS1256_Send8Bit(buf[0]);	/* Set the STATUS register */
-		ADS1256_Send8Bit(buf[1]);	/* Set the MUX register    */
-		ADS1256_Send8Bit(buf[2]);	/* Set the ADCON register  */
-		ADS1256_Send8Bit(buf[3]);	/* Set the DARTE register  */
-
-		CS_1();	/* SPI  cs = 1 */
-	}
-
-	bsp_DelayUS(50);
-}
+    if((rx_buf[0] == 0x36) & (rx_buf[1] == 0x54) & (rx_buf[2] == 0x00) & (rx_buf[3] == 0xC0)){
+        error = 0;
+    }
+    /*
+    else {
+        printf('ADC register data:\n');
+        printf('STATUS: %08X \n',rx_buf[0]);
+        printf('MUX:    %08X \n',rx_buf[1]);
+        printf('ADCON:  %08X \n',rx_buf[2]);
+        printf('DRATE:  %08X \n',rx_buf[3]);
+    }
+    */
+        
+    // wait for a while
+    bsp_DelayUS(1000);
+    
+    return error;
+} 
 
 /*
 *********************************************************************************************************
@@ -737,10 +767,21 @@ void Init_ADC(double _gain,double _sps,uint8_t _mode)
     bcm2835_gpio_fsel(DRDY, BCM2835_GPIO_FSEL_INPT);
     bcm2835_gpio_set_pud(DRDY, BCM2835_GPIO_PUD_UP);
     
-    uint8_t gain = getgain(_gain);
-    uint8_t sps = samplerate(_sps);
+    //uint8_t gain = getgain(_gain);
+    uint8_t gain = 0;     // fixed gain
+    //uint8_t sps = samplerate(_sps);
+    uint8_t sps = 0xC0;   // fixed sps
+
+    uint8_t error = ADS1256_CfgADC(gain, sps);
     
-    ADS1256_CfgADC(gain, 0xC0);
+    // check if initialization was succesful
+    if (error == 0){
+        printf("ADC initialization okay!\n");
+    }
+    else {
+        printf("Error: ADC initialization not okay!\n");
+        killProgram();
+    }
     //ADS1256_StartScan(_mode);
 }
 
@@ -1160,7 +1201,10 @@ int thread1(double duration, unsigned char mode, double gain,char *station_code,
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     while(1){
-        
+        if(kill_flag == 1){
+                goto end;
+            }
+
         // Check to see which data structure we want to save to and point to it
         if(radflag == 0){
             // Point to the first data structure
