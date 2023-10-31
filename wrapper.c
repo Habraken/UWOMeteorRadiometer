@@ -16,12 +16,12 @@ static PyObject *_kill_flag(PyObject *self, PyObject *args);
 /* Module specification */
 static PyMethodDef module_methods[] = {
  //   {"chi2", chi2_chi2, METH_VARARGS, chi2_docstring},
-    {"init", _Init_ADC, METH_VARARGS, {"Initializes the ADC"}},
-    {"read_channel", _Read_Single_Channel, METH_VARARGS, {"Reads a given channel"}},
-    {"init_channel", _Init_Single_Channel, METH_VARARGS, {"Initializes a given channel"}},
-    {"stop", _ADC_Stop, 0, {"Closes the ADC"}},
-    {"run", _thread1, METH_VARARGS, {"Runs the main program"}},
-    {"kill", _kill_flag, METH_VARARGS, {"Softly kills the program"}},
+    {"init", _Init_ADC, METH_VARARGS, "Initializes the ADC"},
+    {"read_channel", _Read_Single_Channel, METH_VARARGS, "Reads a given channel"},
+    {"init_channel", _Init_Single_Channel, METH_VARARGS, "Initializes a given channel"},
+    {"stop", _ADC_Stop, 0, "Closes the ADC"},
+    {"run", _thread1, METH_VARARGS, "Runs the main program"},
+    {"kill", _kill_flag, METH_VARARGS, "Softly kills the program"},
     {NULL, NULL, 0, NULL}
 };
 
