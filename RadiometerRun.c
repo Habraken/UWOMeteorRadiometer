@@ -980,7 +980,7 @@ void savedat(rdm *data, const char *path)
                                                    
     // The conversion of all this data into a string is done below      
     // %.*s prints out a defined number of characters from a provided string
-    snprintf(buf, 127, "%s%.*s_%s_%04d%02d%02d-%02d%02d%02d.%06d_%02d%02d%02d.%06d.rdm", path, 6,
+    snprintf(buf, 127, "%s%.*s_%s_%04d%02d%02d-%02d%02d%02d.%06ld_%02d%02d%02d.%06ld.rdm", path, 6,
     data->station_code, data->channel, jcal1.tm_year+1900, jcal1.tm_mon+1, jcal1.tm_mday, jcal1.tm_hour,
     jcal1.tm_min, jcal1.tm_sec, data->unix_us[0], jcal2.tm_hour, jcal2.tm_min, jcal2.tm_sec,
     data->unix_us[DATA_SIZE-1]);
