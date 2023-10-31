@@ -54,8 +54,6 @@ static PyObject *_Init_ADC(PyObject *self, PyObject *args)
     unsigned char mode;
     PyObject *yerr_obj;
     
-    printf("ERROR");
-    
     /* Parse the input tuple */
     if (!PyArg_ParseTuple(args,"ddb",&gain,&sps,&mode,&yerr_obj))
         return NULL;
