@@ -844,7 +844,7 @@ uint8_t samplerate(double ratenum)
     else if (ratenum==10){
         rate=0x23;
     }
-    else if (ratenum=5){
+    else if (ratenum==5){
         rate=0x13;
     }
     else if (ratenum==2.5){
