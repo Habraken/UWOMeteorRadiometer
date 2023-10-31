@@ -420,7 +420,7 @@ uint8_t ADS1256_CfgADC(uint8_t _gain, uint8_t _drate)
     CS_1();	/* SPI  cs = 1 */
         
     // wait for a while
-    bsp_DelayUS(1000);
+    bsp_DelayUS(2000);
         
     // Check if the configuration was succesful
     // Read ADC configuration parameters from the ADC
@@ -433,8 +433,11 @@ uint8_t ADS1256_CfgADC(uint8_t _gain, uint8_t _drate)
     rx_buf[2] = ADS1256_Recive8Bit();/*  Read the register values */
     rx_buf[3] = ADS1256_Recive8Bit();/*  Read the register values */
     CS_1();
-
-    if((rx_buf[0] == 0x36) & (rx_buf[1] == 0x54) & (rx_buf[2] == 0x00) & (rx_buf[3] == 0xC0)){
+    
+    
+    // Check if the first 4 ADC registers contain the correct data
+    // The STATUS resgister has the ChipID 0x30 and DREADY bit 0x31 that need to be considered  
+    if(((rx_buf[0] == 0x36) | (rx_buf[0] == 0x37)) & (rx_buf[1] == 0x54) & (rx_buf[2] == 0x00) & (rx_buf[3] == 0xC0)){
         error = 0;
     }
     /*
