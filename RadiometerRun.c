@@ -437,7 +437,7 @@ uint8_t ADS1256_CfgADC(uint8_t _gain, uint8_t _drate)
     
     // Check if the first 4 ADC registers contain the correct data
     // The STATUS resgister has the ChipID 0x30 and DREADY bit 0x31 that need to be considered  
-    if(((rx_buf[0] == 0x36) | (rx_buf[0] == 0x37)) & (rx_buf[1] == 0x54) & (rx_buf[2] == 0x00) & (rx_buf[3] == 0xC0)){
+    if(((rx_buf[0] == 0x36) || (rx_buf[0] == 0x37)) && (rx_buf[1] == 0x54) && (rx_buf[2] == 0x00) && (rx_buf[3] == 0xC0)){
         error = 0;
     }
     /*
@@ -1228,7 +1228,7 @@ int thread1(double duration, unsigned char mode, double gain,char *station_code,
             //}
             
             // Acquire the current 24 bit adc value 
-            adc = Read_Single_Channel(channel);
+            adc = Read_Single_Channel(*channel);
             
             // Record the current unix time
             clock_gettime(CLOCK_REALTIME, &tp);
